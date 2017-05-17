@@ -475,8 +475,8 @@ namespace Tiled2Unity
             var xml = goXml.Element("CircleObjectComponent");
             if (xml != null)
             {
-                CircleObject tmxCircle = gameObject.AddComponent<Tiled2Unity.CircleObject>();
-                FillBaseTmxObjectProperties(tmxCircle, xml);
+               // CircleObject tmxCircle = gameObject.AddComponent<Tiled2Unity.CircleObject>();
+                //FillBaseTmxObjectProperties(tmxCircle, xml);
             }
         }
 
