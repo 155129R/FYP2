@@ -4,7 +4,7 @@ using System.Collections;
 public class Movement : MonoBehaviour {
 
     public float speed;
-
+    public VirtualJoystick joystick;
     Vector2 tileSize;
     Vector3 waypoint;
 
@@ -24,12 +24,16 @@ public class Movement : MonoBehaviour {
         down.Set(0, -tileSize.y, 0);
         left.Set(-tileSize.x, 0, 0);
         right.Set(tileSize.x, 0, 0);
+
+        //setting speed
+        speed = 500;
     }
 
 	// Update is called once per frame
 	void Update () {
         if (!moving)
         {
+
             if (Input.GetKey(KeyCode.W))
             {
                 waypoint = this.gameObject.transform.position + up;
@@ -58,6 +62,18 @@ public class Movement : MonoBehaviour {
             else
                 moving = false;
         }
+
+
+        //virtual joystick
+        if(joystick.ismoving)
+        {
+            moveplayer(joystick.GetStickDirection());
+        }
+    }
+    public void moveplayer(Vector3 direction)
+    {
+        Debug.Log(direction);
+        this.gameObject.transform.position = Vector3.MoveTowards(this.gameObject.transform.position, this.gameObject.transform.position+direction.normalized, joystick.GetStickMagnitude()*speed * Time.deltaTime);
     }
 
 }
