@@ -53,9 +53,16 @@ public class VirtualJoystick : MonoBehaviour, IDragHandler,IPointerUpHandler,IPo
         }
     }
 
-    public Vector3 GetStickDirection()
+    public Vector3 GetStickDirection()//if we are not having diagonal movement, change thsi function and the one in movment, this is temp
     {
-        return new Vector3(input.x ,input.z,0);
+        if(Mathf.Abs(input.x) > Mathf.Abs(input.z))
+        {
+            return new Vector3(input.x ,0,0);
+        }
+        else
+            return new Vector3(0, input.z, 0);
+
+        //return new Vector3(input.x ,input.z,0);//this is for diagonal movement
     }
     public float GetStickMagnitude()
     {
