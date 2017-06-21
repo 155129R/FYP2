@@ -69,6 +69,14 @@ public class Bdirector : MonoBehaviour {
 
                 break;
             case Bstate.E_SET_MOVE:
+                for (int i = 0; i < enemy_party.Count; i++)
+                {
+                    //player_units.Enqueue(player_party[i]);
+                    currentunit = enemy_party[i];
+                    MoveCurrentCharacter(currentunit.GetComponent<Enemy>().GetTargetTile());
+                    //currentphase = Bstate.P_SET_ACTION;
+                }
+                currentphase = Bstate.P_SET_MOVE;
                 //currentunit = testenemy;
                 //MoveCurrentCharacter(currentunit.GetComponent<Enemy>().GetTargetTile());
                 //currentphase = Bstate.P_SET_ACTION;
@@ -128,15 +136,19 @@ public class Bdirector : MonoBehaviour {
         GridMovement m = currentunit.GetComponent<GridMovement>();
         StartCoroutine(m.Traverse(destination));
         //check if anymore friendly chaar
-        if(player_units.Count !=0)
+        if (player_units.Count != 0)
         {
             Debug.Log("next allied unit");
-            listening = false;
+
             currentunit = player_units.Dequeue();
         }
         else
-        currentphase = Bstate.E_SET_MOVE;
+        {
+            currentphase = Bstate.E_SET_MOVE;
+            isqueue = false;
+        }
 
+        listening = false;
 
        // SceneData.sceneData.mouseinput = false;
 
