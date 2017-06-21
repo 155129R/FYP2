@@ -14,11 +14,12 @@ public class BGrid : MonoBehaviour {
     public int distance;
     public enum Gridstate
     {  
-        VISIBLE,
-        INACIVE,
         MOVE,
         PATH,
-        HIT
+        ATTACK,
+        HIT,
+        VISIBLE,
+        INACIVE,
         
     }
     public Gridstate gridstate; 

@@ -5,13 +5,11 @@ using System.Collections.Generic;
 
 public class Mirror_Knight : Enemy {
 
-
-
-    public override BGrid GetTargetTile()
+    public override BGrid GetMoveTargetTile()
     {
         GetComponent<GridMovement>().range = GetComponent<GridMovement>().range+1;//temp increase range for checkking
         List<BGrid> walkrange = GetMovementRange();
-        BGrid target;
+
         for (int i = 0; i < walkrange.Count; i++ )//if a player unit is within raange
         {
             if (!walkrange[i].unit)
@@ -20,16 +18,19 @@ public class Mirror_Knight : Enemy {
             if (!walkrange[i].unit.player)
                 continue;
 
-            target = walkrange[i];
-            target = GetAdjacentTile(target, walkrange);
+            BGrid target;
+            targetunit = walkrange[i];
+            target = GetAdjacentTile(targetunit, walkrange);
             if(target != null)
             {
+                
                 GetComponent<GridMovement>().range = GetComponent<GridMovement>().range - 1;
                 return target;
             }
             //if(myList.Contains(x))
             //if(wa)
         }
+        targetunit = null;
         GetComponent<GridMovement>().range = GetComponent<GridMovement>().range - 1;
         int randomtile = Random.Range(0, walkrange.Count);
         return walkrange[randomtile];//return a random tile from movble tiles
@@ -48,4 +49,7 @@ public class Mirror_Knight : Enemy {
             //}
 
     }
+
+
+
 }

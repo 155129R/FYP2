@@ -31,6 +31,7 @@ public class Gridarray : MonoBehaviour
             GenerateGrid();
             if(gridmesh == null)
             Debug.Log("fuc");
+            DerenderGrids();
         }
 
         // Update is called once per frame
@@ -106,10 +107,6 @@ public class Gridarray : MonoBehaviour
             return gridmesh[x, y].GetComponent<BGrid>();
         }
 
-
-
-
-
         public List<BGrid> Search(BGrid start, System.Func<BGrid, BGrid, bool> addTile)
         {
             List<BGrid> retValue = new List<BGrid>();
@@ -172,15 +169,40 @@ public class Gridarray : MonoBehaviour
             b = temp;
         }
 
-        public void SetMovableGrids(List<BGrid> tiles)
+        public void SetGridState(List<BGrid> tiles, BGrid.Gridstate state)
         {
             for (int i = tiles.Count - 1; i >= 0; --i)
             {
-                tiles[i].gridstate = BGrid.Gridstate.MOVE;
-                tiles[i].GetComponent<SpriteRenderer>().enabled = true;
-                tiles[i].GetComponent<SpriteRenderer>().sprite = gridtextures[0];
+                switch(state)
+                {
+                    case BGrid.Gridstate.MOVE:
+                    tiles[i].gridstate = BGrid.Gridstate.MOVE;
+                    break;
+                    case BGrid.Gridstate.ATTACK:
+                    tiles[i].gridstate = BGrid.Gridstate.ATTACK;
+                    break;
+                }
+                UpdateGridSprites();
             }
         }
+        public void SetGridState(BGrid tile, BGrid.Gridstate state)
+        {
+            switch (state)
+            {
+                case BGrid.Gridstate.MOVE:
+                    tile.gridstate = BGrid.Gridstate.MOVE;
+                    break;
+                case BGrid.Gridstate.ATTACK:
+                    tile.gridstate = BGrid.Gridstate.ATTACK;
+                    break;
+                case BGrid.Gridstate.HIT:
+                    tile.gridstate = BGrid.Gridstate.HIT;
+                    break;
+            }
+            UpdateGridSprites();
+        }
+        
+    
         public void RenderPathForGrid(BGrid destination, bool reset = false)
         {
 
@@ -211,8 +233,6 @@ public class Gridarray : MonoBehaviour
                 distance = tile.distance;
             }
         }
-       
-
         public void DerenderGrids()//derenders the entire grid
         {
             for (int i = width-1; i >= 0; --i)
@@ -239,17 +259,20 @@ public class Gridarray : MonoBehaviour
                             break;
 
                         case BGrid.Gridstate.MOVE:
-                            gridmesh[i, x].GetComponent<SpriteRenderer>().sprite = gridtextures[0];
+                            gridmesh[i, x].GetComponent<SpriteRenderer>().sprite = gridtextures[(int)BGrid.Gridstate.MOVE];
                             break;
-
                         case BGrid.Gridstate.PATH:
-                            gridmesh[i, x].GetComponent<SpriteRenderer>().sprite = gridtextures[0];
+                            gridmesh[i, x].GetComponent<SpriteRenderer>().sprite = gridtextures[(int)BGrid.Gridstate.PATH];
                             break;
-
+                        case BGrid.Gridstate.HIT:
+                            gridmesh[i, x].GetComponent<SpriteRenderer>().sprite = gridtextures[(int)BGrid.Gridstate.HIT];
+                            break;
+                        case BGrid.Gridstate.ATTACK:
+                            gridmesh[i, x].GetComponent<SpriteRenderer>().sprite = gridtextures[(int)BGrid.Gridstate.ATTACK];
+                            break;
 
                     }
                     
-                    gridmesh[i, x].GetComponent<BGrid>().gridstate = BGrid.Gridstate.INACIVE;
                 }
             }
         }

@@ -27,6 +27,10 @@ public class gridMouseInput : MonoBehaviour {
                 //Debug.Log("pathing");
                 SceneData.sceneData.gridarray.RenderPathForGrid(GetComponent<BGrid>());
                 break;
+            case BGrid.Gridstate.ATTACK:
+                //Debug.Log("pathing");
+                SceneData.sceneData.gridarray.SetGridState(GetComponent<BGrid>(), BGrid.Gridstate.HIT);
+                break;
             default:
 
                 break;
@@ -45,6 +49,10 @@ public class gridMouseInput : MonoBehaviour {
                 //Debug.Log("de-pathing");
                 SceneData.sceneData.gridarray.RenderPathForGrid(GetComponent<BGrid>(), true);
                 break;
+            case BGrid.Gridstate.HIT:
+                //Debug.Log("pathing");
+                SceneData.sceneData.gridarray.SetGridState(GetComponent<BGrid>(), BGrid.Gridstate.ATTACK);
+                break;
            // case BGrid.Gridstate.MOVE:
                // Debug.Log("de-pathing");
                // SceneData.sceneData.gridarray.RenderPathForGrid(GetComponent<BGrid>(), true);
@@ -62,18 +70,19 @@ public class gridMouseInput : MonoBehaviour {
             return;
 
         //Debug.Log("de-pathing");
+        GameObject director = GameObject.Find("BattleDirector");
         switch (GetComponent<BGrid>().gridstate)
         {
             case BGrid.Gridstate.PATH:
                 //Debug.Log("accepted path");
-                GameObject director = GameObject.Find("BattleDirector");
                 director.GetComponent<Bdirector>().MoveCurrentCharacter(this.GetComponent<BGrid>());
                 //SceneData.sceneData.gridarray.RenderPathForGrid(GetComponent<BGrid>(), true);
                 break;
-            // case BGrid.Gridstate.MOVE:
-            // Debug.Log("de-pathing");
-            // SceneData.sceneData.gridarray.RenderPathForGrid(GetComponent<BGrid>(), true);
-            // break;
+            case BGrid.Gridstate.HIT:
+                //Debug.Log("pathing");
+                director.GetComponent<Bdirector>().CastCurrentAction(this.GetComponent<BGrid>());
+                break;
+
             default:
 
                 break;

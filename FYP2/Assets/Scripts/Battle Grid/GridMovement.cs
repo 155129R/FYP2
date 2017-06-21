@@ -33,9 +33,9 @@ public abstract class GridMovement : MonoBehaviour {
     }
     protected virtual void Filter(List<BGrid> tiles)
     {
-        for (int i = tiles.Count - 1; i >= 0; --i)
-            if (tiles[i].content != null)
-                tiles.RemoveAt(i);
+        //for (int i = tiles.Count - 1; i >= 0; --i)
+        //    if (tiles[i].unit != null)
+        //        tiles.RemoveAt(i);
     }
 	// Update is called once per frame
 	void Update () {

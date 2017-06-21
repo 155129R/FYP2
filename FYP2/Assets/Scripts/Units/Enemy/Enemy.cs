@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public abstract class Enemy : MonoBehaviour {
 
 	// Use this for initialization
+    //public bool in_range;
+    protected BGrid targetunit;
 	void Start () {
 	
 	}
@@ -20,7 +22,7 @@ public abstract class Enemy : MonoBehaviour {
         //return tiles;
     }
 
-    public virtual BGrid GetTargetTile()
+    public virtual BGrid GetMoveTargetTile()
     {
         return null;
     }
@@ -44,5 +46,13 @@ public abstract class Enemy : MonoBehaviour {
             return temp.GetGridAt(tempindex).GetComponent<BGrid>();
         else return null;
 
+    }
+
+    public virtual void CastAction()
+    {
+        if(targetunit != null)
+        {
+            GetComponent<GridAttack>().DoAttack(targetunit);
+        }
     }
 }

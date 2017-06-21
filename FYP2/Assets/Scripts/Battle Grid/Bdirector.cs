@@ -73,17 +73,36 @@ public class Bdirector : MonoBehaviour {
                 {
                     //player_units.Enqueue(player_party[i]);
                     currentunit = enemy_party[i];
-                    MoveCurrentCharacter(currentunit.GetComponent<Enemy>().GetTargetTile());
+                    MoveCurrentCharacter(currentunit.GetComponent<Enemy>().GetMoveTargetTile());
                     //currentphase = Bstate.P_SET_ACTION;
                 }
-                currentphase = Bstate.P_SET_MOVE;
-                //currentunit = testenemy;
-                //MoveCurrentCharacter(currentunit.GetComponent<Enemy>().GetTargetTile());
-                //currentphase = Bstate.P_SET_ACTION;
+                currentphase = Bstate.P_SET_ACTION;
                break;
             case Bstate.P_SET_ACTION:
+               if(!isqueue)
+                {
+                    for (int i = 0; i < player_party.Count; i++)
+                    {
+                        player_units.Enqueue(player_party[i]);
+                    }
+                    isqueue = true;
+                    currentunit = player_units.Dequeue();
+                }
+                //let the player select the action first
+               if (!listening)
+               {
+                   SetCurrentActionGrids();
+                   listening = true;
+               }
+               break;
+            case Bstate.E_SET_ACTION:
+               for (int i = 0; i < enemy_party.Count; i++)
+               {
+                   //player_units.Enqueue(player_party[i]);
+                   currentunit = enemy_party[i];
+                   currentunit.GetComponent<Enemy>().CastAction();
+               }
                currentphase = Bstate.P_SET_MOVE;
-               listening = false;
                break;
         }
 
@@ -126,8 +145,16 @@ public class Bdirector : MonoBehaviour {
         //board.DerenderGrids();
         GridMovement mover = currentunit.GetComponent<GridMovement>();
         tiles = mover.GetTilesInRange(board);
-        board.SetMovableGrids(tiles);
+        board.SetGridState(tiles,BGrid.Gridstate.MOVE);
     }
+    void SetCurrentActionGrids()
+    {
+        GridAttack attack = currentunit.GetComponent<GridAttack>();
+        tiles = attack.GetTilesInRange(board);
+        board.SetGridState(tiles, BGrid.Gridstate.ATTACK);
+    }
+
+
     public void MoveCurrentCharacter(BGrid destination)
     {
         //Debug.Log("calling move funcc");
@@ -138,7 +165,7 @@ public class Bdirector : MonoBehaviour {
         //check if anymore friendly chaar
         if (player_units.Count != 0)
         {
-            Debug.Log("next allied unit");
+            //Debug.Log("next allied unit");
 
             currentunit = player_units.Dequeue();
         }
@@ -162,7 +189,27 @@ public class Bdirector : MonoBehaviour {
         //currentunit.GetComponent<GridMovement>().Traverse(destination);
         //board.DerenderGrids();
         //currentunit
-    }
+    }//move any current character
+    public void CastCurrentAction(BGrid destination)
+    {
+        //need to store what action is being casted
+        board.DerenderGrids();
+        currentunit.GetComponent<GridAttack>().DoAttack(destination);
+        if (player_units.Count != 0)
+        {
+            Debug.Log("next allied unit");
+            currentunit = player_units.Dequeue();
+        }
+        else
+        {
+            currentphase = Bstate.E_SET_ACTION;
+            isqueue = false;
+        }
+        listening = false;
+
+
+    }//cast action(player units  only)
+
     public void ResetMovePhase()
     {
         Debug.Log("reseting");
