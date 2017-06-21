@@ -63,10 +63,10 @@ public class Movement : MonoBehaviour {
 
     public bool forcemoveplayer(Vector3 point)//forces the plaayer to move in a direction until they reach the destination, then return a boolean
     {
-        this.gameObject.transform.position = Vector3.MoveTowards(this.gameObject.transform.position,point,0.3f*speed * Time.deltaTime);
+        this.gameObject.transform.position = Vector3.MoveTowards(this.gameObject.transform.position,point,0.08f*speed * Time.deltaTime);//player seems to be moving according to frame rate, needs fix
         if (this.gameObject.transform.position == point)
         {
-            return true;
+            return true;//if arrived at destination return true
         }
         else
             return false;

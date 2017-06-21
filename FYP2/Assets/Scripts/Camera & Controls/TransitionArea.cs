@@ -5,7 +5,7 @@ public class TransitionArea : MonoBehaviour {
 
 	// Use this for initialization
     public float movetimer;
-    public TransitionArea nextarea;
+    public GameObject nextarea;
     public Vector3 direction;
     bool triggered,isExit;
 
@@ -32,8 +32,10 @@ public class TransitionArea : MonoBehaviour {
 
         if (triggered && SharedData.instance.player.GetComponent<Movement>().forcemoveplayer(this.transform.position))//upon being triggered move player 
         {
-            nextarea.isExit = true;
-            SharedData.instance.player.GetComponent<Movement>().changeArea(nextarea);
+
+            TransitionArea next = nextarea.transform.GetChild(0).GetComponent<TransitionArea>();
+            next.isExit = true;
+            SharedData.instance.player.GetComponent<Movement>().changeArea(next);
         }
 	}
     void OnTriggerEnter2D(Collider2D other)//eneter transition area
@@ -58,7 +60,7 @@ public class TransitionArea : MonoBehaviour {
 
     void LeaveTriggerArea()//shift the player out of the transition area he just arrived at;
     {
-        if (SharedData.instance.player.GetComponent<Movement>().forcemoveplayer(this.transform.position + -direction * 100))
+        if (SharedData.instance.player.GetComponent<Movement>().forcemoveplayer(this.transform.position + -direction * 40))
         {
             Debug.Log("exit sucess");
             SharedData.instance.player.GetComponent<Movement>().m_input = true;

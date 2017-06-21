@@ -10,11 +10,12 @@ namespace Tiled2Unity
 
     public class GridGenerator : MonoBehaviour
     {
-        ObjectLayer tilegroup;
+        public TiledMap stage;
+        public int width, height; 
         // Use this for initialization
         void Start()
         {
-
+  
         }
 
         // Update is called once per frame

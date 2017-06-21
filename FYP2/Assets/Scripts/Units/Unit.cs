@@ -14,6 +14,10 @@ public struct stats
 /// </summary>
 public class Unit : MonoBehaviour {
 
+
+    public BGrid tile;
+    public Directions dir;
+    public bool player;
     /// <summary>
     /// ID of Unit.
     /// </summary>
@@ -97,10 +101,33 @@ public class Unit : MonoBehaviour {
     /// </summary>
     private Vector3 m_vec3Waypoint;
 
+
+
+    public void Place (BGrid target)
+    {
+        // Make sure old tile location is not still pointing to this unit
+        if (tile != null && tile.unit == this)
+            tile.unit = null;
+         
+        // Link unit and tile references
+        tile = target;
+         
+        if (target != null)
+            target.unit = this;
+    }
+ 
+    public void Match ()
+    {
+        transform.localPosition = tile.transform.position;
+        //transform.localEulerAngles = dir.ToEuler();//this is rotation, deal withthis shit later
+    }
+
+
     /// <summary>
     /// Moves the unit upwards by a definable number of tile spaces. Default is 1 tile space.
     /// </summary>
     /// <param name="numOfTimes">Number of times to move by. Default is 1.</param>
+    /// 
     void GoUp(int numOfTimes = 1)
     {
         m_Character.m_UpAnimation.Play();
