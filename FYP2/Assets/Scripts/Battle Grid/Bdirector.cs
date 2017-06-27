@@ -84,13 +84,16 @@ public class Bdirector : MonoBehaviour {
                     for (int i = 0; i < player_party.Count; i++)
                     {
                         player_units.Enqueue(player_party[i]);
+
                     }
                     isqueue = true;
                     currentunit = player_units.Dequeue();
+                    SetCurrentActionPanel();
                 }
                 //let the player select the action first
                if (!listening)
                {
+
                    SetCurrentActionGrids();
                    listening = true;
                }
@@ -140,18 +143,26 @@ public class Bdirector : MonoBehaviour {
         currentphase = Bstate.P_SET_MOVE;//start every encounter with player move phase
         phase_count = 0;
     }
-    void setCurrentMoveGrids()
+    void setCurrentMoveGrids()//sets and renders the movable grid for currentunit
     {
         //board.DerenderGrids();
         GridMovement mover = currentunit.GetComponent<GridMovement>();
         tiles = mover.GetTilesInRange(board);
         board.SetGridState(tiles,BGrid.Gridstate.MOVE);
     }
-    void SetCurrentActionGrids()
+    void SetCurrentActionGrids()//sets and renders the availble grids for currentunit's current action
     {
-        GridAttack attack = currentunit.GetComponent<GridAttack>();
-        tiles = attack.GetTilesInRange(board);
-        board.SetGridState(tiles, BGrid.Gridstate.ATTACK);
+        //GridAttack attack = currentunit.GetComponent<GridAttack>();
+        GridAttack action = currentunit.GetComponent<UnitActions>().currentaction;
+        if (action != null)
+        {
+            tiles = action.GetTilesInRange(board,currentunit);
+            board.SetGridState(tiles, BGrid.Gridstate.ATTACK);
+        }
+    }
+    void SetCurrentActionPanel()//sets the panel to the currentunit's availble actions
+    {
+        SceneData.sceneData.panel.transform.GetChild(0).GetComponent<ActionPanel>().PopulatePanel(currentunit.GetComponent<UnitActions>());
     }
 
 
@@ -194,11 +205,14 @@ public class Bdirector : MonoBehaviour {
     {
         //need to store what action is being casted
         board.DerenderGrids();
-        currentunit.GetComponent<GridAttack>().DoAttack(destination);
+        SceneData.sceneData.panel.transform.GetChild(0).GetComponent<ActionPanel>().ClearPanel();
+        currentunit.GetComponent<UnitActions>().currentaction.DoAttack(destination);
+        currentunit.GetComponent<UnitActions>().currentaction = null;
         if (player_units.Count != 0)
         {
             Debug.Log("next allied unit");
             currentunit = player_units.Dequeue();
+            SetCurrentActionPanel();
         }
         else
         {

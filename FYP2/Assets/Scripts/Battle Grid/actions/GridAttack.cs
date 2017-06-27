@@ -8,6 +8,7 @@ public abstract class GridAttack : MonoBehaviour {
     public int cast_range;
     public int damage;
     public bool ally_cast;
+    public string actionname;
 	void Start () {
 	
 	}
@@ -19,6 +20,17 @@ public abstract class GridAttack : MonoBehaviour {
     public virtual List<BGrid> GetTilesInRange(Gridarray board)
     {
         BGrid tile = GetComponent<Unit>().tile;
+        List<BGrid> retValue = board.Search(tile, ExpandSearch);
+        //skysk printrange(retValue);
+        Filter(retValue);
+        if (!ally_cast)
+            retValue.Remove(GetComponent<Unit>().tile);
+
+        return retValue;
+    }
+    public virtual List<BGrid> GetTilesInRange(Gridarray board,Unit unit)
+    {
+        BGrid tile = unit.tile;
         List<BGrid> retValue = board.Search(tile, ExpandSearch);
         //skysk printrange(retValue);
         Filter(retValue);
@@ -47,8 +59,12 @@ public abstract class GridAttack : MonoBehaviour {
         PlayAnimation(target);
         if(target.unit !=null)
         {
-            //do damage here;
+            DoEffect();
         }
         //target.unit.
+    }
+    public virtual void DoEffect()//put the action's effect here;
+    {
+
     }
 }

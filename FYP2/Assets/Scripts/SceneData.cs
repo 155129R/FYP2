@@ -9,6 +9,7 @@ public class SceneData : MonoBehaviour
     public static SceneData sceneData;
     public Gridarray gridarray;
     public bool mouseinput = true;
+    public GameObject panel;
 	// Use this for initialization
     void Awake()
     {
