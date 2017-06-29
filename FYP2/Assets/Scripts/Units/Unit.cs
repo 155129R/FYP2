@@ -18,6 +18,9 @@ public class Unit : MonoBehaviour {
     public BGrid tile;
     public Directions dir;
     public bool player;
+    public healthbar healthbar;
+    public bool isdead= false;
+
     /// <summary>
     /// ID of Unit.
     /// </summary>
@@ -79,7 +82,7 @@ public class Unit : MonoBehaviour {
     /// <summary>
     /// Max Health of Unit.
     /// </summary>
-    int m_iMaxHealth;
+    public int m_iMaxHealth;
 
     /// <summary>
     /// Current mana of Unit.
@@ -122,6 +125,27 @@ public class Unit : MonoBehaviour {
         //transform.localEulerAngles = dir.ToEuler();//this is rotation, deal withthis shit later
     }
 
+    public void takedamage(int damage)
+    {
+        m_iHealth-=damage;
+        //Debug.Log(damage);
+        if(m_iHealth <= 0)
+        {
+            m_iHealth = 0;
+            isdead = true;
+            death();
+           // Destroy(this.gameObject);
+        }
+        healthbar.setvalue(m_iHealth,m_iMaxHealth);
+        //healthbar
+    }
+
+    public void death()
+    {
+        tile.unit = null;
+        Destroy(healthbar.gameObject);
+        this.gameObject.SetActive(false);
+    }
 
     /// <summary>
     /// Moves the unit upwards by a definable number of tile spaces. Default is 1 tile space.

@@ -19,7 +19,7 @@ public class Bdirector : MonoBehaviour {
     public Bstate currentphase;
     public Unit currentunit,testenemy,player;
     //public Unit testenemy;
-    public int phase_count;
+    public int phase_count,enemy_count;
 
     public List<Unit> player_party;
     public Queue<Unit> player_units;
@@ -28,6 +28,7 @@ public class Bdirector : MonoBehaviour {
 
 
     public Gridarray board;//thsi hoolds the level grid
+    public HPbarHandler barhandler;
     List<BGrid> tiles;//this holds appopratie tile information for the current state 
     public List<Vector2> spawn_points;// this are the spawn indexes for friendly units
 
@@ -40,6 +41,11 @@ public class Bdirector : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+
+        //just check if there aare no enemies
+        if (enemy_count == 0)
+            currentphase = Bstate.END_VICTORY;
 
 	    switch(currentphase)
         {
@@ -72,6 +78,9 @@ public class Bdirector : MonoBehaviour {
                 for (int i = 0; i < enemy_party.Count; i++)
                 {
                     //player_units.Enqueue(player_party[i]);
+                    if (enemy_party[i].GetComponent<Unit>().isdead)
+                        continue;
+
                     currentunit = enemy_party[i];
                     MoveCurrentCharacter(currentunit.GetComponent<Enemy>().GetMoveTargetTile());
                     //currentphase = Bstate.P_SET_ACTION;
@@ -102,10 +111,21 @@ public class Bdirector : MonoBehaviour {
                for (int i = 0; i < enemy_party.Count; i++)
                {
                    //player_units.Enqueue(player_party[i]);
+                   if (enemy_party[i].GetComponent<Unit>().isdead)
+                       continue;
+
                    currentunit = enemy_party[i];
                    currentunit.GetComponent<Enemy>().CastAction();
                }
                currentphase = Bstate.P_SET_MOVE;
+               break;
+            case Bstate.END_VICTORY:
+               board.DerenderGrids();
+                //send the player back to the screen
+               break;
+            case Bstate.END_DEFEAT:
+               board.DerenderGrids();
+               //send the player back to the main menu
                break;
         }
 
@@ -124,6 +144,7 @@ public class Bdirector : MonoBehaviour {
             currentunit.tile = board.GetGridAt(spawn_points[i]).GetComponent<BGrid>();
             currentunit.transform.position = currentunit.tile.transform.position;
             currentunit.Place(currentunit.tile);
+            barhandler.GenerateHPbar(currentunit);
         }
         for (int j = 0; j < enemy_party.Count; j++)
         {
@@ -131,8 +152,10 @@ public class Bdirector : MonoBehaviour {
             currentunit.tile = board.GetRandomEmptyGrid();
             currentunit.transform.position = currentunit.tile.transform.position;
             currentunit.Place(currentunit.tile);
+            barhandler.GenerateHPbar(currentunit);
         }
-
+        enemy_count = enemy_party.Count;
+        //barhandler.placeHPbars();
         //currentunit = testenemy;
         //currentunit.tile = board.GetGridAt(6,8).GetComponent<BGrid>();
         //currentunit.transform.position = currentunit.tile.transform.position;
@@ -153,6 +176,7 @@ public class Bdirector : MonoBehaviour {
     void SetCurrentActionGrids()//sets and renders the availble grids for currentunit's current action
     {
         //GridAttack attack = currentunit.GetComponent<GridAttack>();
+        board.DerenderGrids();
         GridAttack action = currentunit.GetComponent<UnitActions>().currentaction;
         if (action != null)
         {

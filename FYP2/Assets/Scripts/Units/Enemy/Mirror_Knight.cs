@@ -49,7 +49,4 @@ public class Mirror_Knight : Enemy {
             //}
 
     }
-
-
-
 }

@@ -65,6 +65,7 @@ public class WalkMovement : GridMovement
             while (Vector3.Distance(transform.position, waypoint) > .05f)
             {
                 transform.position = Vector3.Lerp(transform.position, waypoint,10* Time.deltaTime);
+                GetComponent<Unit>().healthbar.placehealthbar(transform.position);
                 yield return null;
             }
         }

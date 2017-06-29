@@ -6,7 +6,7 @@ public abstract class GridAttack : MonoBehaviour {
 	// Use this for initialization
     public GameObject Animation;
     public int cast_range;
-    public int damage;
+    public int potency;
     public bool ally_cast;
     public string actionname;
 	void Start () {
@@ -34,8 +34,9 @@ public abstract class GridAttack : MonoBehaviour {
         List<BGrid> retValue = board.Search(tile, ExpandSearch);
         //skysk printrange(retValue);
         Filter(retValue);
-        if (!ally_cast)
-            retValue.Remove(GetComponent<Unit>().tile);
+
+        //if (!ally_cast)
+        //    retValue.Remove(GetComponent<Unit>().tile);
 
         return retValue;
     }
@@ -57,8 +58,11 @@ public abstract class GridAttack : MonoBehaviour {
     public virtual void DoAttack(BGrid target)
     {
         PlayAnimation(target);
+
         if(target.unit !=null)
         {
+            Debug.Log("found target");
+            target.unit.takedamage(potency);
             DoEffect();
         }
         //target.unit.

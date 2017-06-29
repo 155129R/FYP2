@@ -32,17 +32,17 @@ public class ActionPanel : MonoBehaviour {
             button.transform.SetParent(this.transform);
             //myBB.Label = "Button " + i;
             //myBB.transform.positon = new Vector3(100, i * 80, 0);
-            //button.GetComponent<Text>().text = actionlist[i].name;
+            button.GetComponent<Text>().text = actionlist[i].name;
         }
 
     }
 
     public void ClearPanel()//this deletes all children
     {
-        Debug.Log("count: " + transform.childCount);
+        //Debug.Log("count: " + transform.childCount);
         for (int i = 0; i < this.transform.childCount; ++i)
         {
-            Debug.Log("current" + i);
+            //Debug.Log("current" + i);
             GameObject button = transform.GetChild(i).gameObject;
             Destroy(button);
             //Destroy(transform.GetChild(i).GetComponent<GameObject>());
