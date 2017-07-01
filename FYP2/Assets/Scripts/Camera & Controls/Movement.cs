@@ -125,6 +125,13 @@ public class Movement : MonoBehaviour {
     }
     bool GetKeyboardInput()
     {
+            if (Input.GetKey(KeyCode.Z))
+            {   
+                Time.timeScale = 0; //pauses the current scene 
+                Application.LoadLevelAdditive("YourNextScene"); //loads your desired other scene
+            }
+
+
             if (Input.GetKey(KeyCode.W))
             {
                 moveplayer(new Vector3(0, 1, 0));
