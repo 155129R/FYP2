@@ -10,6 +10,10 @@ public class SharedData : MonoBehaviour {
 
     public static SharedData instance = null;
     public Player player;
+    public GameObject game;
+    public Canvas UICanvas;
+    public List<Unit> player_party;
+    public Encounter EncounterManager;
 	// Use this for initialization
 	void Start ()
     {

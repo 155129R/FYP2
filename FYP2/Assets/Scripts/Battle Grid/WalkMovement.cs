@@ -20,7 +20,7 @@ public class WalkMovement : GridMovement
 
     public override IEnumerator Traverse(BGrid tile)
     {
-        Debug.Log("traversing");
+        //Debug.Log("traversing");
         GetComponent<Unit>().Place(tile);
         //unit.Place(tile);
         

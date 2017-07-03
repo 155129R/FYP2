@@ -7,7 +7,7 @@ public class TransitionArea : MonoBehaviour {
     public float movetimer;
     public GameObject nextarea;
     public Vector3 direction;
-    bool triggered,isExit;
+    public bool triggered,isExit;
 
 
 	void Start () {
@@ -62,7 +62,7 @@ public class TransitionArea : MonoBehaviour {
     {
         if (SharedData.instance.player.GetComponent<Movement>().forcemoveplayer(this.transform.position + -direction * 40))
         {
-            Debug.Log("exit sucess");
+            //Debug.Log("exit sucess");
             SharedData.instance.player.GetComponent<Movement>().m_input = true;
             isExit = false;
         }

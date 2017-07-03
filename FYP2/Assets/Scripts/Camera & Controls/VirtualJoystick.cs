@@ -19,10 +19,17 @@ public class VirtualJoystick : MonoBehaviour, IDragHandler,IPointerUpHandler,IPo
         ismoving = false;
 	
 	}
+
+    public void reset()
+    {
+        input = Vector3.zero;
+        joystick.rectTransform.anchoredPosition = Vector3.zero;
+        ismoving = false;
+    }
 	
     public virtual void OnPointerDown(PointerEventData pointer)
     {
-        Debug.Log("down");
+        //Debug.Log("down");
         //OnDrag(pointer);
         //this function is actually obselete(ithink)
     }

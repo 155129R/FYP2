@@ -18,4 +18,15 @@ public class Vitae : GridAttack
     {
         //healing here
     }
+     public override void DoAttack(BGrid target)
+    {
+        PlayAnimation(target);
+
+        if (target.unit != null)
+        {
+            Debug.Log("healing");
+            target.unit.takeheal(potency);
+            DoEffect();
+        }
+    }
 }

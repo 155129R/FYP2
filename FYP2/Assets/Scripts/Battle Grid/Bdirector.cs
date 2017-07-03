@@ -23,7 +23,7 @@ public class Bdirector : MonoBehaviour {
 
     public List<Unit> player_party;
     public Queue<Unit> player_units;
-    bool isqueue=false;
+    bool isqueue=false,init=false;
     public List<Unit> enemy_party;
 
 
@@ -35,13 +35,16 @@ public class Bdirector : MonoBehaviour {
     public bool listening = false;
 
 	void Start () {
-
-        SetBattleStart();
+        Scenemanager.instance.SetBattleActive();
+        Invoke("SetBattleStart", 0.001f);
+        //SetBattleStart();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
+        if (!init)
+            return;
 
         //just check if there aare no enemies
         if (enemy_count == 0)
@@ -121,6 +124,7 @@ public class Bdirector : MonoBehaviour {
                break;
             case Bstate.END_VICTORY:
                board.DerenderGrids();
+               ExitBattleScene();
                 //send the player back to the screen
                break;
             case Bstate.END_DEFEAT:
@@ -132,13 +136,16 @@ public class Bdirector : MonoBehaviour {
 
 	}
 
-    void SetBattleStart()
+    bool SetBattleStart()
     {
         //spawn all players and monsters at the correct location
-        player_units = new Queue<Unit>();
-        //friendly(need loop later)
+        //WaitForSeconds()
+        player_units = new Queue<Unit>();//init player controlled units queue
+        //player_party = SharedData.instance.player_party;
+        GenerateUnits();
         for (int i = 0; i < player_party.Count; i++)
         {
+            //player_party[i] = Instantiate(player_party[i]);
             currentunit = player_party[i];
             //int point = Random.Range(0, spawn_points.Count);
             currentunit.tile = board.GetGridAt(spawn_points[i]).GetComponent<BGrid>();
@@ -165,7 +172,23 @@ public class Bdirector : MonoBehaviour {
 
         currentphase = Bstate.P_SET_MOVE;//start every encounter with player move phase
         phase_count = 0;
+        init = true;
+
+        return true;
     }
+    void GenerateUnits()
+    {
+        for (int i = 0; i < SharedData.instance.EncounterManager.encounterlist.Count; i++)
+        {
+            enemy_party.Add(Instantiate(SharedData.instance.EncounterManager.encounterlist[i]));
+        }
+
+        for (int i = 0; i < SharedData.instance.player_party.Count; i++)
+        {
+            player_party.Add(Instantiate(SharedData.instance.player_party[i]));
+        }
+    }
+
     void setCurrentMoveGrids()//sets and renders the movable grid for currentunit
     {
         //board.DerenderGrids();
@@ -254,6 +277,11 @@ public class Bdirector : MonoBehaviour {
         SceneData.sceneData.mouseinput = true;
         setCurrentMoveGrids();
         
+    }
+    public void ExitBattleScene()
+    {
+        SharedData.instance.EncounterManager.encounterlist.Clear();
+        Scenemanager.instance.UnloadBattleScene();
     }
 
 }

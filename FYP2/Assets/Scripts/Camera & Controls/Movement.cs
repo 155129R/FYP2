@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Movement : MonoBehaviour {
 
@@ -57,11 +58,13 @@ public class Movement : MonoBehaviour {
     public void moveplayer(Vector3 direction ,float magnitude = 1)//control-based movement
     {
         //Debug.Log(direction);//the below line isnt necessary for just 4 directions
+        Vector3 initialpos = gameObject.transform.position;
         this.gameObject.transform.position = Vector3.MoveTowards(this.gameObject.transform.position, this.gameObject.transform.position + direction.normalized, magnitude * speed*Time.deltaTime);
+        SharedData.instance.EncounterManager.CheckEncounter((initialpos - transform.position).sqrMagnitude);
         UpdateAnimations(direction);
     }
 
-    public bool forcemoveplayer(Vector3 point)//forces the plaayer to move in a direction until they reach the destination, then return a boolean
+    public bool forcemoveplayer(Vector3 point)//forces the plaayer to move in a direction until they reach the destination, then return a boolean(turn off m_input to fully "force")
     {
         this.gameObject.transform.position = Vector3.MoveTowards(this.gameObject.transform.position,point,0.08f*speed * Time.deltaTime);//player seems to be moving according to frame rate, needs fix
         if (this.gameObject.transform.position == point)
@@ -112,7 +115,7 @@ public class Movement : MonoBehaviour {
     
     public void changeArea(TransitionArea node)//move the plaayer into a new area
     {
-        Debug.Log("moving player");
+        //Debug.Log("moving player");
         this.gameObject.transform.position = node.transform.position;
     }
     public void ResetSpriteDirection()
@@ -126,9 +129,10 @@ public class Movement : MonoBehaviour {
     bool GetKeyboardInput()
     {
             if (Input.GetKey(KeyCode.Z))
-            {   
-                Time.timeScale = 0; //pauses the current scene 
-                Application.LoadLevelAdditive("YourNextScene"); //loads your desired other scene
+            {
+
+                SharedData.instance.EncounterManager.GenerateEncounter();
+                //Application.LoadLevelAdditive("YourNextScene"); //loads your desired other scene
             }
 
 

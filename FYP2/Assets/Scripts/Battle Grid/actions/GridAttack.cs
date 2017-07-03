@@ -61,7 +61,7 @@ public abstract class GridAttack : MonoBehaviour {
 
         if(target.unit !=null)
         {
-            Debug.Log("found target");
+            //Debug.Log("found target");
             target.unit.takedamage(potency);
             DoEffect();
         }

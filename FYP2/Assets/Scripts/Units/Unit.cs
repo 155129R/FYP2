@@ -139,9 +139,24 @@ public class Unit : MonoBehaviour {
         healthbar.setvalue(m_iHealth,m_iMaxHealth);
         //healthbar
     }
+    public void takeheal(int healing)
+    {
+        m_iHealth += healing;
+        if (m_iHealth > m_iMaxHealth)
+            m_iHealth = m_iMaxHealth;
+
+        healthbar.setvalue(m_iHealth, m_iMaxHealth);
+
+
+    }
 
     public void death()
     {
+        GameObject director = GameObject.Find("BattleDirector");
+        if(!player)
+        {
+            director.GetComponent<Bdirector>().enemy_count--;
+        }
         tile.unit = null;
         Destroy(healthbar.gameObject);
         this.gameObject.SetActive(false);
@@ -204,5 +219,11 @@ public class Unit : MonoBehaviour {
                 m_Character.StopAllAnimation();
             }
         }
+    }
+
+    void Update()
+    {
+        //this ie a hotfix. change this later
+        healthbar.placehealthbar(transform.position);
     }
 }
